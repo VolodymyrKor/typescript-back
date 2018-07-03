@@ -5,7 +5,9 @@
     "module": "commonjs",
     "declaration": true,
     "rootDir": "./src",
-    "outDir": "build"
+    "outDir": "build",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "node_modules",
