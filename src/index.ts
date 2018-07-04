@@ -7,13 +7,14 @@ import "reflect-metadata";
 // import * as https from "https";
 
 import {createKoaServer} from "routing-controllers";
+import * as Controllers from "./controllers";
 const config = require("./../config.json");
 
 try {
     const app = createKoaServer({
         cors: true,
         controllers: [
-            __dirname + "./controllers/*.ts"
+            Controllers.UserController
         ]
     });
 

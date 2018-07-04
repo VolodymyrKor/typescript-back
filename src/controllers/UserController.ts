@@ -2,10 +2,25 @@
  * Copyright (c) Created by Volodymyr Kornetskyi 3/7/2018.
  */
 
-import {JsonController, Param, Body, Get, Post, Put, Delete, HttpCode, OnUndefined, OnNull, NotFoundError} from "routing-controllers";
+import { Authenticate } from "../middleware";
 import { UserNotFoundError } from "../utils/errors";
+import {
+    JsonController,
+    Param,
+    Body,
+    Get,
+    Post,
+    Put,
+    Delete,
+    HttpCode,
+    OnUndefined,
+    OnNull,
+    NotFoundError,
+    UseBefore
+} from "routing-controllers";
 
 @JsonController()
+@UseBefore(Authenticate)
 export class UserController {
 
     @Get("/users")
@@ -19,7 +34,6 @@ export class UserController {
     @OnNull(UserNotFoundError)
     @OnUndefined(UserNotFoundError)
     getOne(@Param("id") id: number) {
-
         const user = null;
         if (!user)
             throw new NotFoundError(`User was not found.`);
