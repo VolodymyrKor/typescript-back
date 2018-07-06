@@ -3,6 +3,7 @@
  */
 
 export * from './UserNotFoundError';
+export * from './IError';
 
 /*
     Already existed:

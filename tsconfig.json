@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
+    "lib": ["DOM","ES6","DOM.Iterable","ScriptHost"],
     "sourceMap": true,
     "module": "commonjs",
     "declaration": true,

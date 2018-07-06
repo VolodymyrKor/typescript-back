@@ -3,3 +3,5 @@
  */
 
 export * from './Authenticate';
+export * from './LogRequests';
+export * from './LogResponses';
