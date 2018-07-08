@@ -36,7 +36,6 @@ export class UserController {
     @OnNull(204)
     @OnUndefined(204)
     getAll() {
-        console.log("This action returns all users");
         return "This action returns all users";
     }
 
@@ -44,7 +43,6 @@ export class UserController {
     @OnNull(UserNotFoundError)
     @OnUndefined(UserNotFoundError)
     getOne(@Param("id") id: number) {
-        console.log("Get user by id");
         const user = null;
         if (!user)
             throw new NotFoundError(`User was not found.`);
@@ -55,31 +53,16 @@ export class UserController {
     @HttpCode(201)
     @Post("/users")
     post(@Body({required: true}) user: any) {
-        this.logger.log("Add new user");
-        this.logger.log(user);
-        this.logger.error({
-            message: 'Error message',
-            error: 'e',
-            data: {
-                customField: [
-                    "cf",
-                    "cf2"
-                ]
-            }
-        });
         return "Saving user...";
     }
 
     @Put("/users/:id")
     put(@Param("id") id: number, @Body() user: any) {
-        console.log("Update user");
-        console.log(user);
         return "Updating a user...";
     }
 
     @Delete("/users/:id")
     remove(@Param("id") id: number) {
-        console.log("Delete user");
         return "Removing user...";
     }
 

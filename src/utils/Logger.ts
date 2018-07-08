@@ -13,13 +13,67 @@ export class Logger {
     constructor(readonly module: string = "Logger") {
     }
 
-    log(message?: string, obj?: any): void {
-        console.log(Color.grey(`${this.indent}***[${this.module}]***`))
-        if (message) {
+    success(message: any, ...additionalParams: Array<any>): void {
+        console.log(Color.green(`[SUCCESS]\n${this.indent}***[${this.module}]***`));
+        if (message.toString() === '[object Object]' || Array.isArray(message)) {
+            console.log(Color.green(`${this.indent}`), message);
+        } else {
+            console.log(Color.green(`${this.indent}${message}`));
+        }
+        for (let param of additionalParams) {
+            if (param.toString() === '[object Object]' || Array.isArray(param)) {
+                console.log(Color.green(`${this.indent}`), param);
+            } else {
+                console.log(Color.green(`${this.indent}${param}`));
+            }
+        }
+    }
+
+    info(message: any, ...additionalParams: Array<any>): void {
+        console.log(Color.white(`[INFO]\n${this.indent}***[${this.module}]***`));
+        if (message.toString() === '[object Object]' || Array.isArray(message)) {
+            console.log(Color.white(`${this.indent}`), message);
+        } else {
+            console.log(Color.white(`${this.indent}${message}`));
+        }
+        for (let param of additionalParams) {
+            if (param.toString() === '[object Object]' || Array.isArray(param)) {
+                console.log(Color.white(`${this.indent}`), param);
+            } else {
+                console.log(Color.white(`${this.indent}${param}`));
+            }
+        }
+    }
+
+    debug(message: any, ...additionalParams: Array<any>): void {
+        console.log(Color.grey(`[DEBUG]\n${this.indent}***[${this.module}]***`));
+        if (message.toString() === '[object Object]' || Array.isArray(message)) {
+            console.log(Color.grey(`${this.indent}`), message);
+        } else {
             console.log(Color.grey(`${this.indent}${message}`));
         }
-        if (obj) {
-            console.log(Color.grey(`${this.indent}`), obj)
+        for (let param of additionalParams) {
+            if (param.toString() === '[object Object]' || Array.isArray(param)) {
+                console.log(Color.grey(`${this.indent}`), param);
+            } else {
+                console.log(Color.grey(`${this.indent}${param}`));
+            }
+        }
+    }
+
+    warn(message: any, ...additionalParams: Array<any>): void {
+        console.log(Color.yellow(`[WARN]\n${this.indent}***[${this.module}]***`));
+        if (message.toString() === '[object Object]' || Array.isArray(message)) {
+            console.log(Color.yellow(`${this.indent}`), message);
+        } else {
+            console.log(Color.yellow(`${this.indent}${message}`));
+        }
+        for (let param of additionalParams) {
+            if (param.toString() === '[object Object]' || Array.isArray(param)) {
+                console.log(Color.yellow(`${this.indent}`), param);
+            } else {
+                console.log(Color.yellow(`${this.indent}${param}`));
+            }
         }
     }
 
@@ -36,7 +90,7 @@ export class Logger {
         if (error) {
             console.log(Color.red(`${this.indent}ERROR: ${error}`));
         }
-        if (message) {
+        if (data) {
             console.log(Color.red(`${this.indent}DATA: `), data);
         }
     }
@@ -45,15 +99,23 @@ export class Logger {
         console.log(Color.blue(`[REQUEST]`));
         console.log(Color.blue(`${this.indent}URL: ${context.request.url}`));
         if (context.request.body) {
-            console.log(Color.blue(`${this.indent}BODY: `), context.request.body);
+            if (context.request.body === '[object Object]' || Array.isArray(context.request.body)) {
+                console.log(Color.blue(`${this.indent}BODY: `), context.request.body);
+            } else {
+                console.log(Color.blue(`${this.indent}BODY: ${context.request.body}`));
+            }
         }
     }
 
     logResponse(context: Context): void {
         console.log(Color.blue(`[RESPONSE]`));
-        console.log(Color.blue(`URL: ${context.request.url}`));
+        console.log(Color.blue(`${this.indent}URL: ${context.request.url}`));
         if (context.response.body) {
-            console.log(Color.blue(`${this.indent}BODY:`), context.response.body);
+            if (context.response.body.toString() === '[object Object]' || Array.isArray(context.response.body)) {
+                console.log(Color.blue(`${this.indent}BODY:`), context.response.body);
+            } else {
+                console.log(Color.blue(`${this.indent}BODY: ${context.response.body}`));
+            }
         }
         console.log(Color.blue('________________________________________________________________________________'))
     }
