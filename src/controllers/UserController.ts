@@ -66,7 +66,18 @@ export class UserController {
     post(@Body({required: true}) user: any) {
         let a: string = uuid();
         let c = [];
-        this.logger.error(c);
+        this.logger.error('trafic is: ', {a: {
+
+            c: 'dsadas',
+            g: function (a) {
+                return 'ddd'+a;
+            }
+
+            }, d: [1, 2, 3, 4, 5]}, 'Additional message', [ {a: function () {
+              return 114;
+            }, c: {a: 'dddddd'}}, {o: '11122233333444'}, 123 ]);
+
+
 
         return "Saving user...";
     }

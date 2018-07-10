@@ -3,6 +3,7 @@
  */
 
 import * as Color from 'colors/safe';
+import {inspect} from 'util';
 import {Context} from "koa";
 import {IError} from "./errors";
 
@@ -14,100 +15,48 @@ export class Logger {
     }
 
     success(message: any, ...additionalParams: Array<any>): void {
-        console.log(Color.green(`[SUCCESS]`));
-        console.log(Color.green(`${this.indent}***[${this.module}]***`));
-        if (message.toString() === '[object Object]' || Array.isArray(message)) {
-            console.log(Color.green(`${this.indent}`), message);
-        } else {
-            console.log(Color.green(`${this.indent}${message}`));
-        }
-        for (let param of additionalParams) {
-            if (param.toString() === '[object Object]' || Array.isArray(param)) {
-                console.log(Color.green(`${this.indent}`), param);
-            } else {
-                console.log(Color.green(`${this.indent}${param}`));
-            }
+        if (message) {
+            this.simpleOutput({
+                color: 'green',
+                type: 'SUCCESS'
+            }, message, ...additionalParams)
         }
     }
 
     info(message: any, ...additionalParams: Array<any>): void {
-        console.log(Color.white(`[INFO]`));
-        console.log(Color.white(`${this.indent}***[${this.module}]***`));
-        if (message.toString() === '[object Object]' || Array.isArray(message)) {
-            console.log(Color.white(`${this.indent}`), message);
-        } else {
-            console.log(Color.white(`${this.indent}${message}`));
-        }
-        for (let param of additionalParams) {
-            if (param.toString() === '[object Object]' || Array.isArray(param)) {
-                console.log(Color.white(`${this.indent}`), param);
-            } else {
-                console.log(Color.white(`${this.indent}${param}`));
-            }
+        if (message) {
+            this.simpleOutput({
+                color: 'white',
+                type: 'INFO'
+            }, message, ...additionalParams)
         }
     }
 
     debug(message: any, ...additionalParams: Array<any>): void {
-        console.log(Color.grey(`[DEBUG]`));
-        console.log(Color.grey(`${this.indent}***[${this.module}]***`));
-        if (message.toString() === '[object Object]' || Array.isArray(message)) {
-            console.log(Color.grey(`${this.indent}`), message);
-        } else {
-            console.log(Color.grey(`${this.indent}${message}`));
-        }
-        for (let param of additionalParams) {
-            if (param.toString() === '[object Object]' || Array.isArray(param)) {
-                console.log(Color.grey(`${this.indent}`), param);
-            } else {
-                console.log(Color.grey(`${this.indent}${param}`));
-            }
+        if (message) {
+            this.simpleOutput({
+                color: 'grey',
+                type: 'DEBUG'
+            }, message, ...additionalParams)
         }
     }
 
     warn(message: any, ...additionalParams: Array<any>): void {
-        console.log(Color.yellow(`[WARN]`));
-        console.log(Color.yellow(`${this.indent}***[${this.module}]***`));
-        if (message.toString() === '[object Object]' || Array.isArray(message)) {
-            console.log(Color.yellow(`${this.indent}`), message);
-        } else {
-            console.log(Color.yellow(`${this.indent}${message}`));
-        }
-        for (let param of additionalParams) {
-            if (param.toString() === '[object Object]' || Array.isArray(param)) {
-                console.log(Color.yellow(`${this.indent}`), param);
-            } else {
-                console.log(Color.yellow(`${this.indent}${param}`));
-            }
+        if (message) {
+            this.simpleOutput({
+                color: 'yellow',
+                type: 'WARN'
+            }, message, ...additionalParams)
         }
     }
 
-    error(message: any, ...additionalParams: Array<any>):void {
-
-        console.log('----')
-        console.log(additionalParams)
-        console.log('----')
-
+    error(message: any, ...additionalParams: Array<any>): void {
         if (message) {
             this.simpleOutput({
                 color: 'red',
                 type: 'ERROR'
-            }, message, additionalParams)
+            }, message, ...additionalParams)
         }
-
-        // console.log(Color.red(`[ERROR]`));
-        // console.log(Color.red(`${this.indent}***[${this.module}]***`));
-        // if (message.toString() === '[object Object]' || Array.isArray(message)) {
-        //     console.log(Color.red(`${this.indent}`), message);
-        // } else {
-        //     console.log(Color.red(`${this.indent}${message}`));
-        // }
-        // for (let param of additionalParams) {
-        //     if (param.toString() === '[object Object]' || Array.isArray(param)) {
-        //         console.log(Color.red(`${this.indent}`), param);
-        //     } else {
-        //         console.log(Color.red(`${this.indent}${param}`));
-        //     }
-        // }
     }
 
     errorDetails({message, error, data}: IError): void {
@@ -125,7 +74,7 @@ export class Logger {
             console.log(Color.red(`${this.indent}ERROR: ${error}`));
         }
         if (data) {
-            console.log(Color.red(`${this.indent}DATA: `), data);
+            console.log(Color.red(`${this.indent}DATA:\n${this.formatObject(data)}`));
         }
     }
 
@@ -133,11 +82,7 @@ export class Logger {
         console.log(Color.blue(`[REQUEST]`));
         console.log(Color.blue(`${this.indent}URL: ${context.request.url}`));
         if (context.request.method !== 'GET' && context.request.body) {
-            if (context.request.body.toString() === '[object Object]' || Array.isArray(context.request.body)) {
-                console.log(Color.blue(`${this.indent}BODY: `), context.request.body);
-            } else {
-                console.log(Color.blue(`${this.indent}BODY: ${context.request.body}`));
-            }
+            console.log(Color.blue(`${this.indent}BODY:\n${this.formatObject(context.request.body)}`));
         }
     }
 
@@ -145,29 +90,57 @@ export class Logger {
         console.log(Color.blue(`[RESPONSE]`));
         console.log(Color.blue(`${this.indent}URL: ${context.request.url}`));
         if (context.response.body) {
-            if (context.response.body.toString() === '[object Object]' || Array.isArray(context.response.body)) {
-                console.log(Color.blue(`${this.indent}BODY:`), context.response.body);
-            } else {
-                console.log(Color.blue(`${this.indent}BODY: ${context.response.body}`));
-            }
+            console.log(Color.blue(`${this.indent}BODY:\n${this.formatObject(context.response.body)}`));
         }
         console.log(Color.blue('________________________________________________________________________________'))
     }
 
-    private simpleOutput(config: {color: string, type: string}, message: any, ...additionalParams: Array<any>):void {
-        console.log(Color[config.color](`[${config.type}]`));
-        console.log(Color[config.color](`${this.indent}***[${this.module}]***`));
-        if (message.toString() === '[object Object]' || Array.isArray(message)) {
-            console.log(Color[config.color](`${this.indent}`), message);
-        } else {
-            console.log(Color[config.color](`${this.indent}${message}`));
+    private formatObject(obj: any): string {
+        if ((typeof obj === 'string') || (obj[Symbol.toStringTag] != null) || obj.hasOwnProperty('toString')) {
+            return `${obj}`;
         }
-        for (let param of additionalParams) {
-            if (param.toString() === '[object Object]' || Array.isArray(param)) {
-                console.log(Color[config.color](`${this.indent}`), param);
-            } else {
-                console.log(Color[config.color](`${this.indent}${param}`));
-            }
+
+        const formattedObj: string = inspect(obj, {
+            // breakLength: Infinity,
+            compact: false
+        });
+        const splittedObj = formattedObj.split('\n');
+        return `${this.indent}|\t` + splittedObj.join(`\n${this.indent}|\t`);
+    }
+
+    private simpleOutput(
+        opts: { color?: string, type?: string } = {color: 'black', type: 'CUSTOM'},
+        message: string = 'CUSTOM MESSAGE', ...objects: Array<any>): void {
+
+        const print = (s: string): void => console.log(Color[opts.color](s));
+
+        print(`[${opts.type}]`);
+        print(`${this.indent}***[${this.module}]***`);
+        print(`${this.indent}|\t${message}`);
+
+        for (const obj of objects) {
+            const objToPrint: string = this.formatObject(obj);
+            print(objToPrint);
         }
     }
+
+    // Old implementation
+    // private simpleOutput(config: { color: string, type: string }, message: any, ...additionalParams: Array<any>): void {
+    //     console.log(Color[config.color](`[${config.type}]`));
+    //     console.log(Color[config.color](`${this.indent}***[${this.module}]***`));
+    //     if (message.toString() === '[object Object]' || Array.isArray(message)) {
+    //         console.log(Color[config.color](`${this.indent}`), message);
+    //     } else {
+    //         console.log(Color[config.color](`${this.indent}${message}`));
+    //     }
+    //     if (additionalParams.length) {
+    //         for (let param of additionalParams) {
+    //             if (param.toString() === '[object Object]' || Array.isArray(param)) {
+    //                 console.log(Color[config.color](`${this.indent}`), param);
+    //             } else {
+    //                 console.log(Color[config.color](`${this.indent}${param}`));
+    //             }
+    //         }
+    //     }
+    // }
 }
