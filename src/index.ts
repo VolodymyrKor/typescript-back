@@ -3,6 +3,8 @@
  */
 
 import "reflect-metadata";
+import {createConnection, getConnection} from "typeorm";
+import {User} from './data/enitity';
 // import * as http from "http";
 // import * as https from "https";
 
@@ -13,17 +15,27 @@ const config = require("./../config.json");
 
 const authUtils = new AuthorizationUtils();
 
-try {
-    const app = createKoaServer({
-        authorizationChecker: (action: Action, roles: string[]) => authUtils.authorizationChecker(action, roles),
-        cors: true,
-        controllers: [
-            Controllers.UserController
-        ]
-    });
+(async () => {
+    try {
+        const app = createKoaServer({
+            authorizationChecker: (action: Action, roles: string[]) => authUtils.authorizationChecker(action, roles),
+            currentUserChecker: (action: Action) => authUtils.currentUserChecker(action),
+            cors: true,
+            controllers: [
+                Controllers.UserController
+            ]
+        });
 
-    app.listen(process.env.PORT || config.server.PORT);
-    console.log(`Server listen port: ${process.env.PORT || config.server.PORT}`)
-} catch (e) {
-    console.log(`Impossible to start server.`, e)
-}
+        await createConnection();
+        //
+        // const user = new User();
+        // user.firstName = '132';
+        // await user.save()
+
+
+        app.listen(process.env.PORT || config.server.PORT);
+        console.log(`Server listen port: ${process.env.PORT || config.server.PORT}`)
+    } catch (e) {
+        console.log(`Impossible to start server.`, e)
+    }
+})();

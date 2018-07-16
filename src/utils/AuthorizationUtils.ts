@@ -15,6 +15,7 @@ export class AuthorizationUtils {
     }
 
     async authorizationChecker(action: Action, roles: string[]): Promise<boolean> {
+        console.log('authorizationChecker');
         const token = action.request.headers["authorization"];
         this.logger.info(`User with token: ${token} try to call: ${action.request.url}`);
         if (!token) {
@@ -25,11 +26,12 @@ export class AuthorizationUtils {
     }
 
     async currentUserChecker(action: Action): Promise<User> {
+        console.log('currentUserChecker');
         const token = action.request.headers["authorization"];
         if (!token) {
             this.logger.error('Token is not provided!');
             throw new UnauthorizedError('Token is not provided!');
         }
-        return new User(token);
+        return new User();
     }
 }

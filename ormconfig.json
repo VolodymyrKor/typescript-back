@@ -1,0 +1,23 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "typescript",
+  "password": "type1234",
+  "database": "typescript_test",
+  "synchronize": true,
+  "logging": false,
+  "entities": [
+    "./src/data/entity/*.js"
+  ],
+  "migrations": [
+    "./src/data/migration/*.ts"
+  ],
+  "subscribers": [
+    "./src/data/subscriber/**/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/data/migration",
+    "entitiesDir": "./src/data/entity"
+  }
+}

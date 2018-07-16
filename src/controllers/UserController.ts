@@ -20,7 +20,7 @@ import {
     NotFoundError,
     UseBefore,
     UseAfter,
-    Authorized
+    Authorized, CurrentUser
 } from "routing-controllers";
 
 @JsonController("/users")
@@ -63,7 +63,7 @@ export class UserController {
     @HttpCode(201)
     @Authorized()
     @Post("/")
-    post(@Body({required: true}) user: any) {
+    post(@Body({required: true, validate: true}) user: any) {
         let a: string = uuid();
         let c = [];
         this.logger.error('trafic is: ', {a: {
@@ -84,7 +84,7 @@ export class UserController {
 
     @Put("/:id")
     @Authorized()
-    put(@Param("id") id: number, @Body() user: any) {
+    put(@Param("id") id: number, @CurrentUser() user: any) {
         return "Updating a user...";
     }
 

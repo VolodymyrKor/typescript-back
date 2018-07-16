@@ -6,12 +6,12 @@
     "module": "commonjs",
     "declaration": true,
     "rootDir": "./src",
-    "outDir": "build",
+    "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
   "exclude": [
     "node_modules",
-    "build"
+    "dist"
   ]
 }

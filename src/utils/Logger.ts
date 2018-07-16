@@ -97,7 +97,7 @@ export class Logger {
 
     private formatObject(obj: any): string {
         if ((typeof obj === 'string') || (obj[Symbol.toStringTag] != null) || obj.hasOwnProperty('toString')) {
-            return `${obj}`;
+            return `${this.indent}|\t${obj}`;
         }
 
         const formattedObj: string = inspect(obj, {
@@ -105,6 +105,7 @@ export class Logger {
             compact: false
         });
         const splittedObj = formattedObj.split('\n');
+
         return `${this.indent}|\t` + splittedObj.join(`\n${this.indent}|\t`);
     }
 
